@@ -1,0 +1,162 @@
+/*
+
+Notes:
+Data must be formatted correctly
+First line contains integer containing number of datasets
+Next line contains chip description (rows columns)
+Next lines contain chip, R = reserved, F = free
+At the end of the description is an empty separating line
+
+Sample Input
+2
+5 6
+R F F F F F
+F F R R F F
+R R R F F F
+F F F F F F
+F F F F F F
+
+5 5
+R R R R R
+F R R R R
+F R F R R
+R R R R R
+R R R R R
+
+Output the two largest unused non-overlapping squares separated by space,
+on a separate line for each data set.
+Sample Output
+9 4
+1 1
+*/
+
+//package chips;
+import java.util.Scanner;
+import java.io.File;
+import java.util.ArrayList;
+import java.util.List;
+//import java.io.BufferedReader; 	//not used?
+import java.io.BufferedWriter;
+import java.io.FileWriter;
+//import java.io.InputStreamReader; //not used?
+//import java.io.IOException;		//not used?
+
+public class Reader_Two
+{
+	private String file_name = "test.txt"; //stores file path, default "test.txt"
+	private int data_size = 0;		// contains number of data sets, initalized to 0
+	private int rows = 0;			// contains number of rows, initialized to 0
+	private int columns = 0;		// contains number of columns, initalized to 0
+	
+	char index_info;	// contains "R" or "F" for the index
+	public Reader_Two() throws Exception
+	{}
+	
+	//This function computes two largest non-overlapping squares
+	public void Squares() throws Exception
+	{
+		try{
+				//Initialize output writer
+				BufferedWriter writer = new BufferedWriter(new FileWriter("output.txt"));
+				//Initialize input reader	
+				Scanner scanner = new Scanner(new File(file_name));
+				
+		
+			
+			//Now that we have the number of data sets:
+			//1. Create each chip as a matrix (array of arrays)
+			//2. Find the two largest non overlapping squares
+			//3. Store these two numbers into "output.txt" on a new line
+				//Read in first line which contains the number of datasets
+			for(data_size = scanner.nextInt(); data_size > 0; data_size--)
+			{
+				//First line contains size of chip: row columns
+				rows = scanner.nextInt();
+				columns = scanner.nextInt();
+				int largest_size = 0;	// contains size of largest non overlapping square
+				int largest_size2 = 0;	// contains size of 2nd largest non overlapping square
+				//create a table to store image of chip
+				int matrix [][] = new int[rows][columns];
+				
+				
+				//this contains quantity of squares of size [i+1].
+				//My hypothesis is that for a square of size n, it must contain 3 squares of size n-1, so 
+				//we decrement the value at n-1 by 3 if we found a square of size n. Then, we just take 
+				//the highest value n found as the largest square, followed by the next highest i entry with a
+				//non-zero value. If no other entries are found, the second largest square is 0
+				//this stores squares up to size 10000;
+				//int squares_quantity[] = new int[9999];
+				//create array of size 2 to store up to two matrices of equivalent size 
+				//this will allow us to select the two matrices providing largest area
+				List<OverlappingAreas> largest_list = new ArrayList<OverlappingAreas>();
+				//List<OverlappingAreas> largest_2 = new ArrayList<OverlappingAreas>();
+				//This nested for loop fills in the matrix
+				for(int i = 0; i < rows; i++)
+				{
+					for(int j = 0; j < columns; j++)
+					{
+						index_info = scanner.next().charAt(0);
+						if(index_info == 'R')
+						{	//If index contains 'R', clearly cannot have a square so set length of square to 0
+							matrix[i][j] = 0;
+						}
+						else if(index_info == 'F')//If index contains a free spot
+						{
+							if(i == 0 || j == 0)
+							{	//If top row or leftmost column, set length of square to 1
+								matrix[i][j] = 1;
+							}
+							else
+							{	//Take minimum value of (index above, left, and diagonally left above) + 1
+								matrix[i][j] = Math.min(matrix[i-1][j-1], Math.min(matrix[i-1][j], matrix[i][j-1]))+1;
+							}
+						}
+
+						//Store the largest length found
+						if(matrix[i][j] > largest_size)
+						{
+							largest_size = matrix[i][j];
+							largest_list.clear();
+							OverlappingAreas A = new OverlappingAreas(i,j);
+							largest_list.add(A);
+						}
+						if(matrix[i][j] == largest_size)
+						{
+							OverlappingAreas B = new OverlappingAreas(i,j	);
+						}
+						//System.out.print(matrix[i][j] + " ");//check to see if input is same
+					}
+				}
+				//System.out.println();//check to see space between matrices
+				//This takes O(rows * columns) time complexity
+				//Matrix is now filled in and we can search for squares
+				//Searching should also take O(rows * columns) time complexity
+				//System.out.println(rows + " " + columns);	//test method to ensure reading
+
+				//Parse our array of quantity of squares, starting from largest_size to find our two largest non-overlapping squares
+				
+				
+				
+				//Now that we have the two largest sizes, store them in "output.txt"
+				//Note that to compute area of the squares, we need length*length
+				largest_size = largest_size*largest_size;
+				largest_size2 = largest_size2*largest_size2;
+				
+				//Write them to output.txt
+				writer.write(Integer.toString(largest_size));
+				writer.write(" ");//Space formatting
+				writer.write(Integer.toString(largest_size2));
+				writer.newLine();
+				//Now that we have finished the data set, begin again from next data set until complete
+			}
+			//Now that we are done with all data sets, we close writer and scanner
+			writer.close();
+			scanner.close();
+			System.out.println("Matrices completed");
+		}
+		catch(Exception e)
+		{
+			System.out.println(e.getMessage());
+		}	
+	}
+}

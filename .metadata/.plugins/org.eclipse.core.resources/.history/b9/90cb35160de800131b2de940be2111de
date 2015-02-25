@@ -1,0 +1,24 @@
+
+public class OverlappingAreas 
+{
+	private int row, column = 0;
+	
+	//set row to input integer
+	public void set_row(int r)
+	{
+		row = r;
+	}
+	//set column to input integer
+	public void set_col(int c)
+	{
+		column = c;
+	}
+	public int row()
+	{
+		return row;
+	}
+	public int col()
+	{
+		return column;
+	}
+}

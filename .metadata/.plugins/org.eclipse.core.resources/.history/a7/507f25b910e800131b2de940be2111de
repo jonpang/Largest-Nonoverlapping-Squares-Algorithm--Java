@@ -1,0 +1,38 @@
+
+public class OverlappingAreas 
+{
+	private int row, column = 0;
+	private boolean valid = false;
+	//set row to input integer
+	public OverlappingAreas(int r, int c, boolean val)
+	{
+		row = r;
+		column = c;
+		val = value;
+	}
+	public void setRow(int r)
+	{
+		row = r;
+	}
+	//set column to input integer
+	public void setCol(int c)
+	{
+		column = c;
+	}
+	public void setBool(boolean val)
+	{
+		valid = val;
+	}
+	public int row()
+	{
+		return row;
+	}
+	public int col()
+	{
+		return column;
+	}
+	public boolean val()
+	{
+		return valid;
+	}
+}

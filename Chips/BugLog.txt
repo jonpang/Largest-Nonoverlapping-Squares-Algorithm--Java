@@ -1,0 +1,6 @@
+Run #.
+
+
+1. Output same size for both squares for all outputs- because I didn't decrement number of largest size squares
+2. Output size for a square that overlapped the larger square - because I didn't account for that type of overlap
+3. Output size for 2nd largest square that was 0 - since I removed extra squares to account for previous overlap
